@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.appdev.deepak.pathfinder" >
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TrainDash"
+            android:label="@string/title_activity_train_dash" >
+        </activity>
+        <activity
+            android:name=".RuntimePremissionActivity"
+            android:label="@string/title_activity_runtime_premission" >
+        </activity>
+        <activity
+            android:name=".RuntimePermissionActivity"
+            android:label="@string/title_activity_runtime_permission" >
+        </activity>
+    </application>
+
+</manifest>
