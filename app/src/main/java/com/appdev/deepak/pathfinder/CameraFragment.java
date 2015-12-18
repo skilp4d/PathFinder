@@ -42,6 +42,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     public static final int MEDIA_TYPE_VIDEO = 2;
 
     private String direction = "FORWARD";
+    private boolean yesno = false;
 
     private static final int PICTURE_SIZE_MAX_WIDTH = 1280;
     private static final int PREVIEW_SIZE_MAX_WIDTH = 640;
@@ -156,6 +157,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
 //                }
 //                restartPreview();
                 direction = "RIGHT";
+                yesno = true;
                 takePicture();
             }
         });
@@ -175,6 +177,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
 //                setupFlashMode();
                   setupCamera();
                 direction = "LEFT";
+                yesno = true;
                 takePicture();
             }
         });
@@ -185,6 +188,17 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
             @Override
             public void onClick(View v) {
                 direction = "FORWARD";
+                yesno = true;
+                takePicture();
+            }
+        });
+
+        final ImageView clickImage = (ImageView) view.findViewById(R.id.clickimage);
+        clickImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                direction = "FORWARD";
+                yesno = false;
                 takePicture();
             }
         });
@@ -504,7 +518,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         int rotation = getPhotoRotation();
-        ImageUtility.savePicture(getActivity(), rotatePicture(rotation, data),direction);
+        ImageUtility.savePicture(getActivity(), rotatePicture(rotation, data),direction,yesno);
         setSafeToTakePhoto(true);
         mCamera.startPreview();
     }

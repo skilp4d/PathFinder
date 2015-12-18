@@ -76,5 +76,14 @@
                 android:layout_toRightOf="@+id/queryButton"
                 android:layout_toEndOf="@+id/queryButton" />
 
+        <ImageView
+            android:id="@+id/clickimage"
+            android:layout_width="120dp"
+            android:layout_height="70dp"
+            android:src="@drawable/abc_btn_switch_to_on_mtrl_00012"
+            android:layout_weight="1.78"
+            android:layout_alignBottom="@+id/moveLeft"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 </RelativeLayout>

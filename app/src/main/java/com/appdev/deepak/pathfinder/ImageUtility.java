@@ -22,6 +22,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Base64;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,7 +67,7 @@ public class ImageUtility {
         return bitmap;
     }
 
-    public static void savePicture(Context context, Bitmap bitmap, String dir) {
+    public static void savePicture(final Context context, Bitmap bitmap, String dir,boolean yesno) {
         int cropHeight;
         if (bitmap.getHeight() > bitmap.getWidth()) cropHeight = bitmap.getWidth();
         else                                        cropHeight = bitmap.getHeight();
@@ -95,10 +96,11 @@ public class ImageUtility {
                 direction = 2;
                 break;
         }
+
+
+
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile = new File(
-                mediaStorageDir.getPath() + File.separator + timeStamp + "_" + direction + ".jpg"
-        );
+
 
 
         // Saving the bitmap
@@ -111,43 +113,50 @@ public class ImageUtility {
             //bitmap = applyCanny(bitmap);
             // Sobel edge detector
             bitmap = applySobel(bitmap);
-            new AsyncTask<Bitmap , Integer , Integer>(){
+                if(yesno){
+                    File mediaFile = new File(
+                            mediaStorageDir.getPath() + File.separator + timeStamp + "_" + direction + ".jpg"
+                    );
+                    new AsyncTask<Bitmap , Integer , Integer>(){
 
-                @Override
-                protected Integer doInBackground(Bitmap... bitmaps) {
-                    Bitmap bitmap = bitmaps[0];
-                    NeuralNet temp = NeuralNet.getInstance();
-                    double db[][] = new double[bitmap.getHeight()][bitmap.getHeight()];
-                    for(int i=0;i<bitmap.getHeight();i++){
-                        for(int j=0;j<bitmap.getWidth();j++){
-                            int  col = bitmap.getPixel(j,i);
-                            col = col & 0xff;
-                            db[i][j] = (double)col/64.0;
+                        @Override
+                        protected Integer doInBackground(Bitmap... bitmaps) {
+                            Bitmap bitmap = bitmaps[0];
+                            NeuralNet temp = NeuralNet.getInstance();
+                            double db[][] = new double[bitmap.getHeight()][bitmap.getHeight()];
+                            for(int i=0;i<bitmap.getHeight();i++){
+                                for(int j=0;j<bitmap.getWidth();j++){
+                                    int  col = bitmap.getPixel(j,i);
+                                    col = col & 0xff;
+                                    db[i][j] = (double)col/64.0;
+                                }
+                            }
+
+                            Mat img = new Mat(db);
+                            double trn[] = img.TolinearArray();
+                            temp.train(trn,direction);
+                            return null;
                         }
-                    }
+                    }.execute(bitmap);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    FileOutputStream stream = new FileOutputStream(mediaFile);
+                    stream.write(out.toByteArray());
+                    stream.close();
+                    Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    Uri fileContentUri = Uri.fromFile(mediaFile);
+                    mediaScannerIntent.setData(fileContentUri);
+                    context.sendBroadcast(mediaScannerIntent);
 
-                    Mat img = new Mat(db);
-                    double trn[] = img.TolinearArray();
-                    temp.train(trn,direction);
-                    return null;
-                }
-            }.execute(bitmap);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            FileOutputStream stream = new FileOutputStream(mediaFile);
 
+            }
 
-            stream.write(out.toByteArray());
-            stream.close();
 
         } catch (IOException exception) {
             exception.printStackTrace();
         }
         //PCA pca = new PCA();
-        // Mediascanner need to scan for the image saved
-        Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri fileContentUri = Uri.fromFile(mediaFile);
-        mediaScannerIntent.setData(fileContentUri);
-        context.sendBroadcast(mediaScannerIntent);
+        //Mediascanner need to scan for the image saved
+
     }
 
     public static Bitmap getResizedBitmap(Bitmap image, int bitmapWidth, int bitmapHeight) {

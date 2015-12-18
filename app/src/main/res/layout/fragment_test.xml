@@ -31,40 +31,16 @@
         android:background="@android:color/black"
         android:gravity="center">
 
-        <ImageView
-            android:id="@+id/moveLeft"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_media_rew"
-            android:layout_weight="1"
-            android:layout_below="@+id/queryButton"
-            android:layout_toLeftOf="@+id/queryButton"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true" />
-
-        <ImageView
+        <com.gc.materialdesign.views.ButtonRectangle
             android:id="@+id/queryButton"
-            android:layout_width="120dp"
+            android:layout_width="180dp"
             android:layout_height="70dp"
-            android:src="@android:drawable/ic_menu_upload"
             android:layout_weight="1.78"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:text="Query"
+            android:textSize="12dp" />
 
-
-
-        <ImageView
-            android:id="@+id/moveRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_media_ff"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/queryButton"
-            android:layout_toRightOf="@+id/queryButton"
-            android:layout_toEndOf="@+id/queryButton" />
 
     </RelativeLayout>
 
